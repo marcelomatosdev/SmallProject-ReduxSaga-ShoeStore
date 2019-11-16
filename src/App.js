@@ -1,9 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+
+import GlobalStyle from './styles/global';
+import Header from '../src/components/Header';
+import Routes from './routes';
 
 function App() {
-   return <h1>Hello redux</h1>;
+   return (
+      <BrowserRouter>
+         <Header />
+         <Routes />
+         <GlobalStyle />
+      </BrowserRouter>
+   );
 }
 
 export default App;
