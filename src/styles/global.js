@@ -30,4 +30,8 @@ button{
    cursor: pointer;
 }
 
+h1{
+   color: white;
+}
+
 `;
