@@ -1,89 +1,47 @@
-import React from 'react';
-import {MdAddShoppingCart} from 'react-icons/md';
+import React, { Component } from 'react';
+import { MdAddShoppingCart } from 'react-icons/md';
+import { formatPrice } from '../../util/format';
+import api from '../../services/api';
 
-import {ProductList} from './styles';
+import { ProductList } from './styles';
 
-export default function Home(){
-   return(
-   <ProductList>
-      <li>
-         <img src="https://images.footlocker.com/is/image/EBFL2/4523455_a1?wid=640&hei=640&fmt=png-alpha" alt="Vans" />
-         <strong>Nice shoes</strong>
-         <span>CAD 99.88</span>
+export default class Home extends Component {
+   state = {
+      products: []
+   };
 
-         <button type="button">
-            <div>
-               <MdAddShoppingCart size={16} color="#FFF" /> 3
-            </div>
+   async componentDidMount() {
+      const response = await api.get('products');
 
-            <span>ADD TO CART</span>
-         </button>
-      </li>
-      <li>
-         <img src="https://images.footlocker.com/is/image/EBFL2/4523455_a1?wid=640&hei=640&fmt=png-alpha" alt="Vans" />
-         <strong>Nice shoes</strong>
-         <span>CAD 99.88</span>
+      const data = response.data.map(product => ({
+         ...product,
+         priceFormatted: formatPrice(product.price)
+      }));
 
-         <button type="button">
-            <div>
-               <MdAddShoppingCart size={16} color="#FFF" /> 3
-            </div>
+      this.setState({ products: data });
+   }
 
-            <span>ADD TO CART</span>
-         </button>
-      </li>
-      <li>
-         <img src="https://images.footlocker.com/is/image/EBFL2/4523455_a1?wid=640&hei=640&fmt=png-alpha" alt="Vans" />
-         <strong>Nice shoes</strong>
-         <span>CAD 99.88</span>
+   render() {
+      const { products } = this.state;
 
-         <button type="button">
-            <div>
-               <MdAddShoppingCart size={16} color="#FFF" /> 3
-            </div>
+      return (
+         <ProductList>
+            {products.map(product => (
+               <li key={product.id}>
+                  <img src={product.image} alt={product.title} />
+                  <strong>{product.title}</strong>
+                  <span>{product.priceFormatted}</span>
 
-            <span>ADD TO CART</span>
-         </button>
-      </li>
-      <li>
-         <img src="https://images.footlocker.com/is/image/EBFL2/4523455_a1?wid=640&hei=640&fmt=png-alpha" alt="Vans" />
-         <strong>Nice shoes</strong>
-         <span>CAD 99.88</span>
+                  <button type="button">
+                     <div>
+                        <MdAddShoppingCart size={16} color="#FFF" /> 3
+                     </div>
 
-         <button type="button">
-            <div>
-               <MdAddShoppingCart size={16} color="#FFF" /> 3
-            </div>
-
-            <span>ADD TO CART</span>
-         </button>
-      </li>
-      <li>
-         <img src="https://images.footlocker.com/is/image/EBFL2/4523455_a1?wid=640&hei=640&fmt=png-alpha" alt="Vans" />
-         <strong>Nice shoes</strong>
-         <span>CAD 99.88</span>
-
-         <button type="button">
-            <div>
-               <MdAddShoppingCart size={16} color="#FFF" /> 3
-            </div>
-
-            <span>ADD TO CART</span>
-         </button>
-      </li>
-      <li>
-         <img src="https://images.footlocker.com/is/image/EBFL2/4523455_a1?wid=640&hei=640&fmt=png-alpha" alt="Vans" />
-         <strong>Nice shoes</strong>
-         <span>CAD 99.88</span>
-
-         <button type="button">
-            <div>
-               <MdAddShoppingCart size={16} color="#FFF" /> 3
-            </div>
-
-            <span>ADD TO CART</span>
-         </button>
-      </li>
-   </ProductList>
-   );
+                     <span>ADD TO CART</span>
+                  </button>
+               </li>
+            ))}
+         </ProductList>
+      );
+   }
 }

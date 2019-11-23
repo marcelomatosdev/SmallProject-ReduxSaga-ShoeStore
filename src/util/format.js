@@ -1,0 +1,5 @@
+export const { format: formatPrice } = new Intl.NumberFormat('en', {
+   style: 'currency',
+   currency: 'CAD',
+   currencyDisplay: 'code'
+});
