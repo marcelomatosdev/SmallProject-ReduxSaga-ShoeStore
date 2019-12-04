@@ -10,7 +10,16 @@ import * as CartActions from '../../store/modules/cart/actions';
 
 import { Container, ProductTable, Total } from './styles';
 
-function Cart({ cart, dispatch }) {
+import { formatPrice } from '../../util/format';
+
+function Cart({ cart, dispatch, updateAmount }) {
+   function increment(product) {
+      dispatch(CartActions.updateAmount(product.id, product.amount + 1));
+   }
+
+   function decrement(product) {
+      dispatch(CartActions.updateAmount(product.id, product.amount - 1));
+   }
    return (
       <Container>
          <ProductTable>
@@ -36,24 +45,30 @@ function Cart({ cart, dispatch }) {
 
                      <td>
                         <div>
-                           <button type="button">
-                              <MdAddCircleOutline size={20} color="#7159c1" />
+                           <button
+                              type="button"
+                              onClick={() => decrement(product)}
+                           >
+                              <MdRemoveCircleOutline
+                                 size={20}
+                                 color="#7159c1"
+                              />
                            </button>
                            <input
                               type="number"
                               readOnly
                               value={product.amount}
                            />
-                           <button type="button">
-                              <MdRemoveCircleOutline
-                                 size={20}
-                                 color="#7159c1"
-                              />
+                           <button
+                              type="button"
+                              onClick={() => increment(product)}
+                           >
+                              <MdAddCircleOutline size={20} color="#7159c1" />
                            </button>
                         </div>
                      </td>
                      <td>
-                        <strong>R$345.65</strong>
+                        <strong>{product.subtotal}</strong>
                      </td>
                      <td>
                         <button
@@ -81,7 +96,10 @@ function Cart({ cart, dispatch }) {
 }
 
 const mapStateToProps = state => ({
-   cart: state.cart
+   cart: state.cart.map(product => ({
+      ...product,
+      subtotal: formatPrice(product.price * product.amount)
+   }))
 });
 
 export default connect(mapStateToProps)(Cart);
